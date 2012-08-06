@@ -13,10 +13,13 @@ import org.openqa.selenium.WebDriverCommandProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jp.vmi.selenium.selenese.inject.DoCommand;
+import jp.vmi.selenium.selenese.inject.RunFile;
+import jp.vmi.selenium.selenese.inject.RunFiles;
+
 import jp.vmi.selenium.selenese.command.Command;
 import jp.vmi.selenium.selenese.command.Command.Failure;
 import jp.vmi.selenium.selenese.command.Command.Result;
-import jp.vmi.selenium.utils.LoggerUtils;
 
 import static jp.vmi.selenium.selenese.command.Command.*;
 
@@ -101,11 +104,9 @@ public class Runner {
         return result;
     }
 
+    @RunFile
     public Result run(File file) {
-        long stime = System.nanoTime();
-        String name = file.getName();
         try {
-            log.info("Start: {}", name);
             Parser parser = Parser.getParser(file);
             if (parser instanceof TestSuiteParser) {
                 Result totalResult = SUCCESS;
@@ -127,11 +128,10 @@ public class Runner {
         } catch (InvalidSeleneseException e) {
             log.error(e.getMessage());
             return new Failure(e.getMessage());
-        } finally {
-            log.info("End({}): {}", LoggerUtils.durationToString(stime, System.nanoTime()), name);
         }
     }
 
+    @RunFiles
     public Result run(List<File> files) {
         Result totalResult = SUCCESS;
         for (File file : files)
