@@ -101,8 +101,8 @@ public class TestSuiteResult extends TestResult {
     @XmlAttribute
     public int getFailures() {
         int failures = 0;
-        for (TestCaseResult caseResult : testCaseResults)
-            failures += caseResult.getFailures();
+        for (TestCaseResult result : testCaseResults)
+            failures += result.getFailures();
         return failures;
     }
 
@@ -114,8 +114,8 @@ public class TestSuiteResult extends TestResult {
     @XmlAttribute
     public int getErrors() {
         int errors = 0;
-        for (TestCaseResult caseResult : testCaseResults)
-            errors += caseResult.getErrors();
+        for (TestCaseResult result : testCaseResults)
+            errors += result.getErrors();
         return errors;
     }
 
@@ -127,8 +127,20 @@ public class TestSuiteResult extends TestResult {
     @XmlAttribute
     public int getSkipped() {
         int skipped = 0;
-        for (TestCaseResult caseResult : testCaseResults)
-            skipped += caseResult.getSkipped();
+        for (TestCaseResult result : testCaseResults)
+            skipped += result.getSkipped();
         return skipped;
+    }
+
+    /**
+     * Get passed count.
+     *
+     * @return passed count.
+     */
+    public int getPassed() {
+        int passed = 0;
+        for (TestCaseResult result : testCaseResults)
+            passed += result.getPassed();
+        return passed;
     }
 }

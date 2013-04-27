@@ -102,9 +102,18 @@ public class TestCaseResult extends TestResult {
     }
 
     /**
+     * Get passed count.
+     *
+     * @return passed count. (0 or 1)
+     */
+    public int getPassed() {
+        return success ? 1 : 0;
+    }
+
+    /**
      *  Get error count.
      *
-     *  @return error count.
+     *  @return error count. (0 or 1)
      */
     public int getErrors() {
         return error != null ? 1 : 0;
@@ -113,7 +122,7 @@ public class TestCaseResult extends TestResult {
     /**
      *  Get failure count.
      *
-     *  @return failure count.
+     *  @return failure count. (0 or 1)
      */
     public int getFailures() {
         return failure != null ? 1 : 0;
