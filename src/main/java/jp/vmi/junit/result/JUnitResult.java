@@ -1,7 +1,9 @@
 package jp.vmi.junit.result;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Writer;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -9,6 +11,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.commons.lang3.time.FastDateFormat;
 
 import static jp.vmi.junit.result.ObjectFactory.*;
@@ -37,6 +40,8 @@ public final class JUnitResult {
 
     private static String xmlResultDir = null;
 
+    private static String htmlResultDir = null;
+
     private static PrintStream ps = null;
 
     private static JAXBContext initContext() {
@@ -54,6 +59,15 @@ public final class JUnitResult {
      */
     public static void setXmlResultDir(String dir) {
         xmlResultDir = dir;
+    }
+
+    /**
+     * Set directory for storing html results.
+     *
+     * @param dir directory.
+     */
+    public static void setHtmlResultDir(String dir) {
+        htmlResultDir = dir;
     }
 
     /**
@@ -82,8 +96,15 @@ public final class JUnitResult {
     public static void endTestSuite(ITestSuite testSuite) {
         TestSuiteResult suiteResult = (TestSuiteResult) map.remove(testSuite);
         suiteResult.endTestSuite();
-        if (xmlResultDir == null || suiteResult.getTests() == 0)
+        if (suiteResult.getTests() == 0)
             return;
+        if (xmlResultDir != null)
+            generateXmlResult(suiteResult);
+        if (htmlResultDir != null)
+            generateHtmlResult(suiteResult);
+    }
+
+    private static void generateXmlResult(TestSuiteResult suiteResult) {
         try {
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
@@ -94,6 +115,36 @@ public final class JUnitResult {
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static void generateHtmlResult(final TestSuiteResult suiteResult) {
+        File file = new File(htmlResultDir, "Result-" + suiteResult.getName() + ".html");
+        Writer writer;
+        try {
+            writer = new FileWriterWithEncoding(file, "UTF-8");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        new HtmlResultBuilder(suiteResult.getName()) {
+            @Override
+            public void body() {
+                start("h1");
+                text(title);
+                start("table");
+                tr("result:", "");
+                tr("totalTime:", suiteResult.getTime());
+                tr("numTestTotal:", suiteResult.getTests());
+                tr("numTestPasses:", suiteResult.getPassed());
+                tr("numTestFailures:", suiteResult.getFailures());
+                tr("numCommandPasses:", 0);
+                tr("numCommandFailures:", 0);
+                tr("numCommandErrors:", 0);
+                tr("Selenium Version:", 0);
+                tr("Selenium Revision:", 0);
+                end();
+
+            }
+        }.build(writer);
     }
 
     /**

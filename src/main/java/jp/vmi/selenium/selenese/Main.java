@@ -156,6 +156,10 @@ public class Main {
             .hasArg().withArgName("dir")
             .withDescription("output XML JUnit results to specified directory.")
             .create());
+        options.addOption(OptionBuilder.withLongOpt("html-result")
+            .hasArg().withArgName("dir")
+            .withDescription("output Selenium-RC-like-HTML results to specified directory.")
+            .create());
         options.addOption(OptionBuilder.withLongOpt("timeout")
             .hasArg().withArgName("timeout")
             .withDescription("set timeout (ms) for waiting. (default: " + DEFAULT_TIMEOUT_MILLISEC + " ms)")
