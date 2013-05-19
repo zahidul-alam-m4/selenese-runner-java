@@ -1,8 +1,12 @@
 package jp.vmi.selenium.webdriver;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
@@ -59,6 +63,8 @@ public class WebDriverManager implements Supplier<WebDriver> {
 
     private static final WebDriverManager manager = new WebDriverManager();
 
+    private static String seleniumVersion = null;
+
     private boolean isSingleInstance = true;
 
     private WebDriverFactory factory;
@@ -76,6 +82,32 @@ public class WebDriverManager implements Supplier<WebDriver> {
      */
     public static WebDriverManager getInstance() {
         return manager;
+    }
+
+    /**
+     * Get Selenium version.
+     *
+     * @return Selenium version.
+     */
+    public static String getSeleniumVersion() {
+        if (seleniumVersion == null) {
+            InputStream is = WebDriverManager.class
+                .getResourceAsStream("/META-INF/maven/org.seleniumhq.selenium/selenium-api/pom.properties");
+            if (is != null) {
+                try {
+                    Properties props = new Properties();
+                    props.load(is);
+                    seleniumVersion = props.getProperty("version");
+                } catch (IOException e) {
+                    // ignore
+                } finally {
+                    IOUtils.closeQuietly(is);
+                }
+            }
+            if (seleniumVersion == null)
+                seleniumVersion = "<unknown>";
+        }
+        return seleniumVersion;
     }
 
     /**

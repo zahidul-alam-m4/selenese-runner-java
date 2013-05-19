@@ -77,6 +77,15 @@ public class TestSuiteResult extends TestResult {
     }
 
     /**
+     * Get list of TestCaseResult instance.
+     *
+     * @return list of TestCaseResult instance.
+     */
+    public List<TestCaseResult> getTestCaseResults() {
+        return testCaseResults;
+    }
+
+    /**
      * End test-suite.
      */
     public void endTestSuite() {
@@ -142,5 +151,53 @@ public class TestSuiteResult extends TestResult {
         for (TestCaseResult result : testCaseResults)
             passed += result.getPassed();
         return passed;
+    }
+
+    /**
+     * Get passed command count.
+     *
+     * @return passed command count.
+     */
+    public int getCommandPassed() {
+        int passed = 0;
+        for (TestCaseResult result : testCaseResults)
+            passed += result.getCommandPassed();
+        return passed;
+    }
+
+    /**
+     * Get failure command count.
+     *
+     * @return failure command count.
+     */
+    public int getCommandFailures() {
+        int failures = 0;
+        for (TestCaseResult result : testCaseResults)
+            failures += result.getCommandFailures();
+        return failures;
+    }
+
+    /**
+     * Get error command count.
+     *
+     * @return error count.
+     */
+    public int getCommandErrors() {
+        int errors = 0;
+        for (TestCaseResult result : testCaseResults)
+            errors += result.getCommandErrors();
+        return errors;
+    }
+
+    /**
+     * Is the test-suite sucess.
+     *
+     * @return true if the test-suite is success.
+     */
+    public boolean isSuccess() {
+        for (TestCaseResult result : testCaseResults)
+            if (result.getErrors() > 0 || result.getFailures() > 0)
+                return false;
+        return true;
     }
 }

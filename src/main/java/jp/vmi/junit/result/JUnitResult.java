@@ -117,7 +117,7 @@ public final class JUnitResult {
         }
     }
 
-    private static void generateHtmlResult(final TestSuiteResult suiteResult) {
+    private static void generateHtmlResult(TestSuiteResult suiteResult) {
         File file = new File(htmlResultDir, "Result-" + suiteResult.getName() + ".html");
         Writer writer;
         try {
@@ -125,26 +125,7 @@ public final class JUnitResult {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        new HtmlResultBuilder(suiteResult.getName()) {
-            @Override
-            public void body() {
-                start("h1");
-                text(title);
-                start("table");
-                tr("result:", "");
-                tr("totalTime:", suiteResult.getTime());
-                tr("numTestTotal:", suiteResult.getTests());
-                tr("numTestPasses:", suiteResult.getPassed());
-                tr("numTestFailures:", suiteResult.getFailures());
-                tr("numCommandPasses:", 0);
-                tr("numCommandFailures:", 0);
-                tr("numCommandErrors:", 0);
-                tr("Selenium Version:", 0);
-                tr("Selenium Revision:", 0);
-                end();
-
-            }
-        }.build(writer);
+        HtmlResult.generate(writer, suiteResult);
     }
 
     /**

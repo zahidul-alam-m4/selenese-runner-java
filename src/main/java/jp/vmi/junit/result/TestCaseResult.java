@@ -158,4 +158,24 @@ public class TestCaseResult extends TestResult {
     public String getSystemErr() {
         return (systemErrs.size() != 0) ? StringUtils.join(systemErrs, NL) : null;
     }
+
+    public int getCommandPassed() {
+        // TODO 自動生成されたメソッド・スタブ
+        return 0;
+    }
+
+    public int getCommandFailures() {
+        // TODO 自動生成されたメソッド・スタブ
+        return 0;
+    }
+
+    public int getCommandErrors() {
+        // TODO 自動生成されたメソッド・スタブ
+        return 0;
+    }
+
+    public List<CommandResult> getCommandResults() {
+        // TODO 自動生成されたメソッド・スタブ
+        return null;
+    }
 }
