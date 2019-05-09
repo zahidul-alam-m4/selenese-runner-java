@@ -1,7 +1,8 @@
 {
   "summary": {
     "title": "Test",
-    "owner": "Metafour"
+    "owner": "Metafour",
+    "description": "a test system"
   },
   "detail": {
     "contributors": [],
